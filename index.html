@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#101a16">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jungle Siege">
+<title>JUNGLE SIEGE — 3D v0.1.10</title>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="splash" aria-label="القائمة الرئيسية">
+<div class="jp-bg"></div>
+<div class="jp">
+ <div class="jp-top">
+  <div class="jp-player"><div class="jp-av px" style="aspect-ratio:96/112;background-size:1262.500% auto;background-position:1.971% 1.411%"></div><div class="jp-pd"><span>اللاعب</span><span>المستوى <b id="homeLevel">1</b></span><div class="jp-xp"><i id="homeXPFill"></i></div><small id="homeXPText" hidden></small></div></div>
+  <div class="jp-wal"><div class="jp-pill"><div class="px jp-dia" style="aspect-ratio:50/46;background-size:2424.000% auto;background-position:86.317% 3.160%"></div><b id="homeGems">0</b><button id="homeGemPlus" aria-label="شراء جواهر">+</button></div><button id="homeSettings" class="jp-gear px" style="aspect-ratio:64/62;background-size:1893.750% auto;background-position:99.129% 1.945%" aria-label="الإعدادات"></button></div>
+ </div>
+ <div class="jp-logo px" style="aspect-ratio:470/255;background-size:257.872% auto;background-position:49.865% 0.943%"></div>
+ <button id="homeLevels" class="jp-card px" style="aspect-ratio:410/322;background-size:295.610% auto;background-position:25.561% 73.389%" aria-label="وضع المستويات"></button>
+ <div id="homeModes" class="jp-card px" role="button" tabindex="0" style="aspect-ratio:410/335;background-size:295.610% auto;background-position:79.800% 74.128%" aria-label="أوضاع اللعب الأخرى">
+  <button class="jp-hs" data-m="survival" aria-label="طور البقاء" style="left:13.4%;top:60.6%;width:20%;height:30.7%"></button>
+  <button class="jp-hs" data-m="challenge" aria-label="طور التحدي" style="left:41.7%;top:60.6%;width:20%;height:30.7%"></button>
+  <button class="jp-hs" data-m="boss" aria-label="طور الزعماء" style="left:69.5%;top:60.6%;width:20%;height:30.7%"></button>
+ </div>
+ <div class="jp-bar">
+  <button id="homeAch" class="px" style="grid-column:span 2;aspect-ratio:198/72;background-size:612.121% auto;background-position:9.172% 97.858%" aria-label="الإنجازات"></button>
+  <button id="homeUnits" class="px" style="grid-column:span 2;aspect-ratio:228/74;background-size:531.579% auto;background-position:73.171% 97.851%" aria-label="تطوير الجنود"></button>
+  <button id="homeShop" class="px" style="grid-column:span 2;aspect-ratio:198/72;background-size:612.121% auto;background-position:50.690% 97.858%" aria-label="المتجر"></button>
+  <button id="homeExit" class="px" style="grid-column:3/span 2;aspect-ratio:182/76;background-size:665.934% auto;background-position:97.282% 98.176%" aria-label="خروج"></button>
+ </div>
+</div></div>
+<div id="hud"><button id="mb" aria-label="الخريطة">🗺️</button><span>❤️ <b id="lv">10</b></span><span>الموجة <b id="wv">0/10</b></span><span id="coinHud" style="color:var(--gold)">🪙 <b id="mn">100</b></span><span class="gem">💎 <b id="gemCount">0</b></span></div>
+<div id="wrap"><canvas id="c" aria-label="ساحة لعبة دفاع الغابة ثلاثية الأبعاد"></canvas><button id="leaderSkill" title="قدرة القائد">⚔️ ضربة القائد</button></div>
+<div id="waveControls"><button id="nw">▶ بدء الموجة 1</button><div id="speedChoices" aria-label="سرعة اللعب"><button data-speed="1">1×</button><button data-speed="2">2×</button><button data-speed="3">3×</button><button data-speed="4">4×</button><button data-speed="5">5×</button></div></div>
+<div id="bar"><div id="towerDeck"></div></div>
+<div id="soldierDeck" aria-label="الجنود المتاحون"></div>
+<div id="abilityBar"></div>
+<div id="intermission"><span id="intermissionText">⏳ تجهيز الموجة التالية خلال 15 ثانية</span><button id="earlyWave" hidden>▶ بدء الموجة الآن</button></div>
+<div id="sel"><span>اختر برج وابنيه بجانب الطريق · طوّره حتى المستوى الخامس</span></div>
+<div id="ov"><h2 id="t">انتهت اللعبة</h2><p id="s"></p><button id="go">إعادة المستوى</button><button id="next" style="display:none">المستوى التالي ⟵</button><button id="gm">خريطة المستويات</button></div>
+<div id="lm"><h2>🗺️ اختر المرحلة</h2><p>افتح المراحل بالتقدم في اللعبة · 💎 <b id="mapGems">0</b></p><div id="stageList"></div><button id="closeMap">↩️ رجوع</button></div>
+<div id="prep"><div id="prepbox"><h2>⚔️ تجهيز المرحلة</h2><p>اختر 4 دفاعات فقط. تبدأ كل مباراة بـ 150 ذهبية.</p><div id="prepCount" style="text-align:center;color:#8fe6b7;font-weight:800;margin:8px">0 / 4 دفاعات</div><div id="prepTowers"></div><h3 style="text-align:center;color:#f4d47b;margin:16px 0 6px">✨ قدرات اختيارية</h3><p>القدرات بتنشرى بالجواهر 💎 والشحنة بتنستخدم مرة وحدة بس. اللي ما استخدمتو بيضل معك.</p><div id="prepAbilities"><button data-a="0">❄️ عاصفة جليد<br>40 🪙</button><button data-a="1">☄️ ضربة نيزكية<br>50 🪙</button><button data-a="2">💚 علاج القلعة<br>35 🪙</button><button data-a="3">⚡ صاعقة جماعية<br>45 🪙</button></div><div id="prepMoney" style="text-align:center;color:#f4d47b;margin-top:10px">الرصيد: 150 🪙</div><button id="prepStart">ابدأ المعركة ▶</button><button id="prepCancel">رجوع للخريطة</button></div></div>
+<div id="loading"><div class="spinner"></div><b>JUNGLE SIEGE · 3D v0.1.10</b><small style="color:#9cb5a4">11 برجًا × 5 مستويات · 24 نوع وحش · يلزم الإنترنت لمحرك Three.js</small></div>
+<div id="extraControls"><button id="openShop">🛒 المتجر</button><button id="openUnits">🪖 الجنود</button><button id="openModes">🎮 الأطوار</button><button id="openTasks">🏆 المهام</button></div>
+<div id="extraPanel" aria-live="polite"><div class="extraHead"><b id="extraTitle">المتجر</b><button id="extraClose">✕</button></div><div id="extraBody"></div></div>
+<div id="gemToast"></div>
+<div id="hint">اضغط على برج لتطويره أو نقله أو بيعه</div>
+<script type="module" src="game.js"></script>
+</body>
+</html>
