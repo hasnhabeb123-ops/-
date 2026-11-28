@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
+        android:icon="@drawable/jungle_siege_icon"
+        android:roundIcon="@drawable/jungle_siege_icon"
         android:allowBackup="false"
         android:label="JUNGLE SIEGE"
         android:usesCleartextTraffic="false"
