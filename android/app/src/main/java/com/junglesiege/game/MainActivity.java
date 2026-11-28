@@ -14,7 +14,7 @@ import android.graphics.Color;
 
 public class MainActivity extends Activity {
     private WebView webView;
-    private static final String GAME_URL = "https://hasnhabeb123.github.io/-/";
+    private static final String GAME_URL = "https://hasnhabeb123-ops.github.io/-/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String host = request.getUrl().getHost();
-                if (host != null && (host.equals("hasnhabeb123.github.io") || host.endsWith(".github.io"))) return false;
+                if (host != null && (host.equals("hasnhabeb123-ops.github.io") || host.endsWith(".github.io"))) return false;
                 return false;
             }
         });
