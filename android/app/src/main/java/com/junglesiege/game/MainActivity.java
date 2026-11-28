@@ -4,17 +4,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.ServiceWorkerController;
-import android.webkit.WebSettings;
 import android.graphics.Color;
+
+import androidx.webkit.WebViewAssetLoader;
 
 public class MainActivity extends Activity {
     private WebView webView;
-    private static final String GAME_URL = "https://hasnhabeb123-ops.github.io/-/";
+    private WebViewAssetLoader assetLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,10 @@ public class MainActivity extends Activity {
         getWindow().setStatusBarColor(Color.rgb(16, 26, 22));
         getWindow().setNavigationBarColor(Color.rgb(16, 26, 22));
 
+        assetLoader = new WebViewAssetLoader.Builder()
+            .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
+            .build();
+
         webView = new WebView(this);
         webView.setBackgroundColor(Color.rgb(16, 26, 22));
         WebSettings settings = webView.getSettings();
@@ -38,19 +42,22 @@ public class MainActivity extends Activity {
         settings.setDatabaseEnabled(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
+        settings.setAllowFileAccess(false);
+        settings.setAllowContentAccess(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                String host = request.getUrl().getHost();
-                if (host != null && (host.equals("hasnhabeb123-ops.github.io") || host.endsWith(".github.io"))) return false;
-                return false;
+            public android.webkit.WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                return assetLoader.shouldInterceptRequest(request.getUrl());
             }
         });
         webView.setWebChromeClient(new WebChromeClient());
         setContentView(webView);
-        if (savedInstanceState == null) webView.loadUrl(GAME_URL);
-        else webView.restoreState(savedInstanceState);
+        if (savedInstanceState == null) {
+            webView.loadUrl("https://appassets.androidplatform.net/assets/game/index.html");
+        } else {
+            webView.restoreState(savedInstanceState);
+        }
     }
 
     @Override
