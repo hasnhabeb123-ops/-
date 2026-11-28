@@ -10,7 +10,59 @@ android {
         applicationId 'com.junglesiege.game'
         minSdk 23
         targetSdk 35
-        versionCode 1
-        versionName '0.1.10'
+        versionCode 2
+        versionName '0.1.11'
     }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.12.1'
+}
+
+// Package the actual web game into the APK. Three.js is fetched at build time,
+// then served from the APK at runtime; the installed game needs no network.
+def gameAssetsDir = layout.buildDirectory.dir('generated/gameAssets')
+android.sourceSets.main.assets.srcDir(gameAssetsDir)
+
+tasks.register('prepareBundledGameAssets') {
+    outputs.dir(gameAssetsDir)
+    doLast {
+        def outDir = gameAssetsDir.get().asFile
+        def gameDir = new File(outDir, 'game')
+        def vendorDir = new File(gameDir, 'vendor')
+        gameDir.mkdirs()
+        vendorDir.mkdirs()
+
+        def repoDir = rootProject.projectDir.parentFile
+        ['index.html', 'game.js', 'style.css', 'manifest.json', 'icon.svg', 'sw.js'].each { name ->
+            copy {
+                from new File(repoDir, name)
+                into gameDir
+            }
+        }
+        copy {
+            from new File(repoDir, 'assets')
+            into new File(gameDir, 'assets')
+        }
+
+        def gameJs = new File(gameDir, 'game.js')
+        def source = gameJs.getText('UTF-8')
+        source = source.replace(
+            'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js',
+            './vendor/three.module.js'
+        )
+        gameJs.setText(source, 'UTF-8')
+
+        def threeFile = new File(vendorDir, 'three.module.js')
+        new URL('https://raw.githubusercontent.com/mrdoob/three.js/r160/build/three.module.js').withInputStream { input ->
+            threeFile.withOutputStream { output -> output << input }
+        }
+        if (threeFile.length() < 500000) {
+            throw new GradleException('Three.js download looks incomplete; refusing to package an invalid offline game.')
+        }
+    }
+}
+
+tasks.named('preBuild').configure {
+    dependsOn tasks.named('prepareBundledGameAssets')
 }
